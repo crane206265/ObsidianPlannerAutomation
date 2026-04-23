@@ -2,7 +2,7 @@
 
 A Python utility for automatically generating structured planner notes in Obsidian, designed to work with the Day Planner plugin.
 
-This project focuses on **automating daily note generation**, **navigation linking**, and **structured organization** within an Obsidian vault.
+This project automates **daily note generation**, **navigation linking**, and **monthly indexing** within an Obsidian vault.
 
 ---
 
@@ -17,6 +17,7 @@ This project focuses on **automating daily note generation**, **navigation linki
 - ⚙️ CLI-based execution  
 - 🧪 Dry-run mode (preview without writing files)  
 - 🔁 Overwrite / skip existing files  
+- ▶️ One-click execution via `.bat` launcher  
 
 ---
 
@@ -25,6 +26,7 @@ This project focuses on **automating daily note generation**, **navigation linki
 ```
 project/
 ├── MarkdownGenerator.py
+├── run_MarkdownGenerator.bat
 ├── templates/
 │   ├── Mon.md
 │   ├── Tue.md
@@ -34,8 +36,6 @@ project/
 │   ├── Sat.md
 │   └── Sun.md
 ```
-
-This repository is intended to grow into a modular toolkit for Obsidian automation.
 
 ---
 
@@ -56,8 +56,6 @@ This repository is intended to grow into a modular toolkit for Obsidian automati
 
 ## 📄 Daily Note Format
 
-Each daily note includes navigation links:
-
 ```
 Prev : [[2026-05-01]]
 Next : [[2026-05-03]]
@@ -68,8 +66,6 @@ Template content is appended below this block.
 ---
 
 ## 📄 Monthly Note Format
-
-Monthly notes are generated as a simple index:
 
 ```
 ### Notes
@@ -91,8 +87,6 @@ Monthly notes are generated as a simple index:
 
 ## 🧩 Template System
 
-Templates are selected based on weekday:
-
 ```
 templates/
 ├── Mon.md
@@ -110,13 +104,14 @@ Each template is appended to the generated daily note.
 
 ## 🚀 Usage
 
-Run the generator script:
+### 1. Run via Python (CLI)
 
 ```
 python MarkdownGenerator.py \
   --base-path "<your-vault-path>" \
   --start-date 2026-05-01 \
-  --end-date 2026-06-30
+  --end-date 2026-06-30 \
+  --generate-month-notes
 ```
 
 ---
@@ -162,11 +157,41 @@ python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end
 
 ---
 
+## ▶️ Quick Run (Windows)
+
+You can run the generator with a single click using the provided `.bat` file:
+
+```
+run_MarkdownGenerator.bat
+```
+
+This file executes the Python script with predefined options.
+
+### Customize
+
+Edit the `.bat` file to change:
+
+- date range  
+- base path  
+- options (`--overwrite`, `--dry-run`, etc.)
+
+Example:
+
+```
+python MarkdownGenerator.py ^
+  --base-path "C:\YourVault" ^
+  --start-date 2026-05-01 ^
+  --end-date 2026-05-31 ^
+  --generate-month-notes
+```
+
+---
+
 ## 🛠 Future Improvements
 
 - [ ] Weekly note generation  
 - [ ] Config file support (JSON / YAML)  
-- [ ] Template placeholders (e.g. `{date}`)  
+- [ ] Smart date options (`--today`, `--this-month`)  
 - [ ] Logging system  
 - [ ] Obsidian URI integration  
 
