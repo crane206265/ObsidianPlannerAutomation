@@ -1,33 +1,51 @@
 # Obsidian Day Planner Automation
 
-A Python utility for automating daily planner note generation in Obsidian, designed to integrate with the Day Planner plugin.
+A Python utility for automatically generating structured planner notes in Obsidian, designed to work with the Day Planner plugin.
 
-This project focuses on **structured daily note generation**, **navigation linking**, and **planner-ready formatting**.
+This project focuses on **automating daily note generation**, **navigation linking**, and **structured organization** within an Obsidian vault.
 
 ---
 
 ## ✨ Features
 
-- 📅 Generate daily markdown notes for a given date range  
-- 🔗 Automatic `Prev` / `Next` navigation links  
-- 🗂 Hierarchical folder structure:
+- 📅 Generate daily notes for a given date range  
+- 🔗 Automatic navigation links (`Prev` / `Next`)  
+- 🗂 Structured folder hierarchy:
   - Year → Month → Week  
-- 🧩 Designed for Obsidian Day Planner plugin usage  
-- 📝 **Template support (planned)**
-  - Different templates per weekday (Mon–Sun)  
-- ⚙️ Customizable generation options (planned)
-  - Skip existing files / overwrite mode  
+- 📝 Weekday-based template system  
+- 📄 Automatic monthly note generation  
+- ⚙️ CLI-based execution  
+- 🧪 Dry-run mode (preview without writing files)  
+- 🔁 Overwrite / skip existing files  
 
 ---
 
-## 📁 Folder Structure
+## 📁 Project Structure
 
-Generated notes follow this structure:
+```
+project/
+├── MarkdownGenerator.py
+├── templates/
+│   ├── Mon.md
+│   ├── Tue.md
+│   ├── Wed.md
+│   ├── Thu.md
+│   ├── Fri.md
+│   ├── Sat.md
+│   └── Sun.md
+```
+
+This repository is intended to grow into a modular toolkit for Obsidian automation.
+
+---
+
+## 📁 Generated Folder Structure
 
 ```
 <basePath>/
 └── 2026/
     └── May. 2026/
+        ├── May. 2026.md
         └── May. Week 1/
             ├── 2026-05-01.md
             ├── 2026-05-02.md
@@ -36,113 +54,127 @@ Generated notes follow this structure:
 
 ---
 
-## 📄 Generated Note Format
+## 📄 Daily Note Format
 
-Each file includes navigation links:
+Each daily note includes navigation links:
 
 ```
 Prev : [[2026-05-01]]
 Next : [[2026-05-03]]
 ```
 
-Planned (template-based content):
+Template content is appended below this block.
+
+---
+
+## 📄 Monthly Note Format
+
+Monthly notes are generated as a simple index:
 
 ```
-# Daily Plan
+### Notes
 
-## Schedule
--
-
-## Tasks
--
-
-## Notes
--
+- [[2026-05-01]]
+- [[2026-05-02]]
+- [[2026-05-03]]
+...
 ```
 
 ---
 
 ## 🧠 Week Definition
 
-This project uses a **custom week-of-month definition**:
-
 - Week starts on **Monday**  
 - The week containing the **1st day of the month is Week 1**
 
 ---
 
-## 🚀 Usage
+## 🧩 Template System
 
-### 1. Clone repository
-
-```
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
-```
-
----
-
-### 2. Configure parameters
-
-Edit inside `main.py`:
-
-```python
-base_path = r"C:\Your\Obsidian\Vault\Path"
-start_date = "2026-05-01"
-end_date = "2026-06-30"
-```
-
----
-
-### 3. Run script
-
-```
-python main.py
-```
-
----
-
-## ⚙️ Configuration
-
-| Parameter     | Description                          |
-|--------------|--------------------------------------|
-| base_path    | Path to Obsidian vault               |
-| start_date   | Start date (YYYY-MM-DD)              |
-| end_date     | End date (inclusive)                 |
-
----
-
-## 🧩 Template System (Planned)
-
-Future versions will support **weekday-based templates**:
+Templates are selected based on weekday:
 
 ```
 templates/
 ├── Mon.md
 ├── Tue.md
 ├── Wed.md
-...
+├── Thu.md
+├── Fri.md
+├── Sat.md
+└── Sun.md
 ```
 
-Each generated note will automatically load the appropriate template based on the date.
+Each template is appended to the generated daily note.
 
 ---
 
-## 🛠 Planned Features
+## 🚀 Usage
 
-- [ ] Weekday-based template system  
-- [ ] CLI support (`argparse`)  
-- [ ] JSON/YAML config file  
-- [ ] Overwrite / skip existing files option  
-- [ ] Custom output formats  
+Run the generator script:
+
+```
+python MarkdownGenerator.py \
+  --base-path "<your-vault-path>" \
+  --start-date 2026-05-01 \
+  --end-date 2026-06-30
+```
+
+---
+
+## ⚙️ CLI Options
+
+| Option | Description |
+|------|------------|
+| `--base-path` | Obsidian vault root path |
+| `--start-date` | Start date (YYYY-MM-DD) |
+| `--end-date` | End date (inclusive) |
+| `--overwrite` | Overwrite existing files |
+| `--dry-run` | Preview without writing files |
+| `--generate-month-notes` | Generate monthly notes |
+
+---
+
+## 🧪 Examples
+
+### Generate notes
+
+```
+python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30
+```
+
+### Dry run (no files created)
+
+```
+python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30 --dry-run
+```
+
+### Overwrite existing files
+
+```
+python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30 --overwrite
+```
+
+### Generate monthly notes
+
+```
+python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30 --generate-month-notes
+```
+
+---
+
+## 🛠 Future Improvements
+
+- [ ] Weekly note generation  
+- [ ] Config file support (JSON / YAML)  
+- [ ] Template placeholders (e.g. `{date}`)  
+- [ ] Logging system  
 - [ ] Obsidian URI integration  
-- [ ] Logging / dry-run mode  
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome.
+Contributions, issues, and suggestions are welcome.
 
 ---
 
