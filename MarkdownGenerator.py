@@ -39,12 +39,19 @@ def write_md(date: datetime, base_path: Path, overwrite=True) -> None:
 
     file_path = folder_path / f"{date_str}.md"
 
+    weekday = date.strftime("%a")  # Mon, Tue ...
+    BASE_DIR = Path(__file__).resolve().parent
+    TEMPLATE_DIR = BASE_DIR / "templates"
+    template_path = TEMPLATE_DIR / f"{weekday}.md"
+    content = template_path.read_text(encoding="utf-8")
+
     if file_path.exists() and not overwrite:
         return
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(f"Prev : [[{prev_str}]]\n")
         f.write(f"Next : [[{next_str}]]\n")
         f.write("\n")
+        f.write(content)
 
 
 def main(start_date: str, end_date: str, base_path: str, overwrite=True) -> None:
@@ -54,7 +61,7 @@ def main(start_date: str, end_date: str, base_path: str, overwrite=True) -> None
 
     current = start_dt
     while current <= end_dt:   # end_date 포함
-        write_md(current, base_path, overwrite=True)
+        write_md(current, base_path, overwrite=overwrite)
         current += timedelta(days=1)
 
 
