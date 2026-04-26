@@ -178,7 +178,7 @@ python PlannerAnalyzer.py \
 | `--base-path` | Obsidian vault planner path |
 | `--start-date` | Start date (YYYY-MM-DD) |
 | `--end-date` | End date (inclusive) |
-| `--categories` | Suffix keywords (e.g. 공부 연습) |
+| `--categories` | Prefix / Suffix keywords (e.g. 공부 연습) |
 | `--exclude-uncategorized` | Remove uncategorized data |
 | `--no-xkcd` | Disable xkcd style |
 | `--font-weight` | normal / bold / heavy |
