@@ -198,8 +198,7 @@ def category_keys(records, categories: list):
         lowered = record["content"].lower()
 
         for category in categories:
-            # 예: "해석학 공부", "푸리에 연습"처럼 끝나는 문장을 후보로 잡음
-            if lowered.endswith(category.lower()):
+            if lowered.endswith(category.lower()) or lowered.startswith(category.lower()):
                 keys[category].add(lowered)
             else:
                 keys[category]  # keep empty category
