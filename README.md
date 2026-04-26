@@ -2,12 +2,20 @@
 
 A Python utility for automatically generating structured planner notes in Obsidian, designed to work with the Day Planner plugin.
 
-This project automates **daily note generation**, **navigation linking**, and **monthly indexing** within an Obsidian vault.
+This project automates:
+
+- 📝 **Daily note generation**
+- 🔗 **Navigation linking**
+- 📄 **Monthly indexing**
+- 📊 **Planner analysis & visualization**
+
+within an Obsidian vault.
 
 ---
 
 ## ✨ Features
 
+### 📝 Generator
 - 📅 Generate daily notes for a given date range  
 - 🔗 Automatic navigation links (`Prev` / `Next`)  
 - 🗂 Structured folder hierarchy:
@@ -19,6 +27,17 @@ This project automates **daily note generation**, **navigation linking**, and **
 - 🔁 Overwrite / skip existing files  
 - ▶️ One-click execution via `.bat` launcher  
 
+### 📊 Analyzer
+- Parse planner entries automatically  
+- Extract time duration from schedule  
+- Keyword-based task classification  
+- Interactive category merging (manual grouping)  
+- Category-wise time aggregation  
+- Daily time trend visualization  
+- xkcd-style graphs  
+- Korean font support (bold adjustable)  
+- CLI-based execution  
+
 ---
 
 ## 📁 Project Structure
@@ -26,7 +45,9 @@ This project automates **daily note generation**, **navigation linking**, and **
 ```
 project/
 ├── MarkdownGenerator.py
+├── PlannerAnalyzer.py
 ├── run_MarkdownGenerator.bat
+├── run_PlannerAnalyzer.bat
 ├── templates/
 │   ├── Mon.md
 │   ├── Tue.md
@@ -78,6 +99,23 @@ Template content is appended below this block.
 
 ---
 
+## 📊 Planner Format (Analyzer)
+
+Analyzer parses only structured planner lines:
+
+```
+- [ ] 09:00 - 10:30 Study Rudin
+- [x] 11:00 - 12:00 Python project
+```
+
+- `[ ]` / `[x]` → completion status  
+- `HH:MM - HH:MM` → duration  
+- `content` → classification target  
+
+All other lines (notes, free text) are ignored.
+
+---
+
 ## 🧠 Week Definition
 
 - Week starts on **Monday**  
@@ -102,9 +140,11 @@ Each template is appended to the generated daily note.
 
 ---
 
-## 🚀 Usage
+# 🚀 Usage
 
-### 1. Run via Python (CLI)
+## 📝 Generator
+
+### Run via Python (CLI)
 
 ```
 python MarkdownGenerator.py \
@@ -116,16 +156,34 @@ python MarkdownGenerator.py \
 
 ---
 
-## ⚙️ CLI Options
+## 📊 Analyzer
+
+### Run via Python (CLI)
+
+```
+python PlannerAnalyzer.py \
+  --base-path "<your-vault-path>" \
+  --start-date 2026-04-01 \
+  --end-date 2026-04-30 \
+  --exclude-uncategorized \
+  --font-weight heavy
+```
+
+---
+
+## ⚙️ CLI Options (Analyzer)
 
 | Option | Description |
 |------|------------|
-| `--base-path` | Obsidian vault root path |
+| `--base-path` | Obsidian vault planner path |
 | `--start-date` | Start date (YYYY-MM-DD) |
 | `--end-date` | End date (inclusive) |
-| `--overwrite` | Overwrite existing files |
-| `--dry-run` | Preview without writing files |
-| `--generate-month-notes` | Generate monthly notes |
+| `--categories` | Suffix keywords (e.g. 공부 연습) |
+| `--exclude-uncategorized` | Remove uncategorized data |
+| `--no-xkcd` | Disable xkcd style |
+| `--font-weight` | normal / bold / heavy |
+| `--category-mode` | interactive / auto |
+| `--show-missing` | Print missing files |
 
 ---
 
@@ -137,63 +195,91 @@ python MarkdownGenerator.py \
 python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30
 ```
 
-### Dry run (no files created)
+### Analyze planner
 
 ```
-python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30 --dry-run
-```
-
-### Overwrite existing files
-
-```
-python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30 --overwrite
-```
-
-### Generate monthly notes
-
-```
-python MarkdownGenerator.py --base-path "C:\Vault" --start-date 2026-05-01 --end-date 2026-06-30 --generate-month-notes
+python PlannerAnalyzer.py --base-path "C:\Vault" --start-date 2026-04-01 --end-date 2026-04-30 --exclude-uncategorized
 ```
 
 ---
 
 ## ▶️ Quick Run (Windows)
 
-You can run the generator with a single click using the provided `.bat` file:
+### Generator
 
 ```
 run_MarkdownGenerator.bat
 ```
 
-This file executes the Python script with predefined options.
-
-### Customize
-
-Edit the `.bat` file to change:
-
-- date range  
-- base path  
-- options (`--overwrite`, `--dry-run`, etc.)
-
-Example:
+### Analyzer
 
 ```
-python MarkdownGenerator.py ^
-  --base-path "C:\YourVault" ^
-  --start-date 2026-05-01 ^
-  --end-date 2026-05-31 ^
-  --generate-month-notes
+run_PlannerAnalyzer.bat
 ```
+
+---
+
+## ⚠️ Windows Encoding Issue (IMPORTANT)
+
+If your path contains Korean characters (e.g. `문서`),  
+you may see broken paths like:
+
+```
+C:\Users\...\臾몄꽌\...
+```
+
+### ✅ Fix
+
+Add this line at the top of your `.bat` file:
+
+```bat
+chcp 65001 > nul
+```
+
+### ✅ Example
+
+```bat
+@echo off
+chcp 65001 > nul
+
+cd /d "%~dp0"
+
+python PlannerAnalyzer.py ^
+  --base-path "C:\Users\dlgkr\OneDrive\문서\Obsidian\Planner" ^
+  --start-date 2026-04-01 ^
+  --end-date 2026-04-30 ^
+  --exclude-uncategorized ^
+  --font-weight heavy
+
+pause
+```
+
+### ⚠️ Additional Note
+
+If issues persist:
+
+- Save `.bat` file as **UTF-8 with BOM**
+- Or avoid non-ASCII paths
+
+---
+
+## 📊 Output
+
+### Category Summary
+- Total time per category (bar chart)
+
+### Daily Trend
+- Time per category over time (line chart)
 
 ---
 
 ## 🛠 Future Improvements
 
 - [ ] Weekly note generation  
+- [ ] Graph export (PNG → Obsidian embed)  
 - [ ] Config file support (JSON / YAML)  
 - [ ] Smart date options (`--today`, `--this-month`)  
-- [ ] Logging system  
-- [ ] Obsidian URI integration  
+- [ ] Automatic keyword extraction  
 
 ---
 
